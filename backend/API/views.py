@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse , HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
+
+#models
+from .models import Person
 
 #time and system
 from datetime import datetime
@@ -36,3 +39,25 @@ def msg_post(request):
         "Luck" :"We are hoping this msg was recived"
     } 
     return JsonResponse(responce,safe=False)
+
+@require_http_methods(["POST",])
+@csrf_exempt
+def join(request):
+    try:
+        #get image 
+        uploaded_image = request.FILES['profile']
+        new_user = Person()
+        new_user.username = request.POST['username']
+        new_user.profile = uploaded_image
+        new_user.save()
+        return JsonResponse("200",safe=False)
+    except:
+        return JsonResponse("400",safe=False)
+
+@csrf_exempt
+@require_http_methods(["POST",])
+def get_profile(request):
+    try:
+        return HttpResponse(Person.objects.get(username=request.POST["username"]).profile.url)
+    except:
+        return HttpResponse("400")
