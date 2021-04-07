@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
 #time and system
 from datetime import datetime
@@ -29,6 +30,7 @@ def msgs(request):
 
 #post msg
 @require_http_methods(["POST",])
+@csrf_exempt
 def msg_post(request):
     responce = {
         "Luck" :"We are hoping this msg was recived"
