@@ -29,28 +29,37 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.all(12),
             height: MediaQuery.of(context).size.height,
             child: FutureBuilder(
-              future: null,
+              future: TalkMeService().getMessages(),
               builder: (context, snapshot) {
-                return ListView(
-                  shrinkWrap: true,
-                  children: [
-                    chatBubble(
-                      Message(
-                        message:
-                            'Hey, Idiot, wassup. let me increase the message and see what will become of my wigdet\nYey it expanded!',
-                        timeSent: DateTime.now(),
-                        userId: '892',
-                      ),
-                    ),
-                  ],
-                );
+                print(snapshot);
+                List<Message> messages = snapshot.data;
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return chatBubble(messages[index]);
+                    },
+                  );
+                }
+                return Text('No messages sorry');
               },
             ),
           ),
           // Text editing box
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey[300],
+                  blurRadius: 3,
+                  spreadRadius: 2,
+                  offset: Offset(0, -2),
+                ),
+              ],
+            ),
             child: Row(
               children: [
                 Flexible(

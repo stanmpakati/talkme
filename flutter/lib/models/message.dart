@@ -15,7 +15,7 @@ class Message {
     return Message(
       userId: json['userId'],
       message: json['message'],
-      timeSent: json['timeSent'],
+      timeSent: DateTime.parse(json['timeSent']),
     );
   }
 
