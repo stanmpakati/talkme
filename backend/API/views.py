@@ -3,8 +3,12 @@ from django.http import JsonResponse , HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
+
+#serilizers 
+from .serializers import MessageSerializer
+
 #models
-from .models import Person
+from .models import Person , Message
 
 #time and system
 from datetime import datetime
@@ -23,22 +27,22 @@ def gateway(request):
 #get all msgs
 @require_http_methods(["GET",])
 def msgs(request):
-    responce = {
-        "id" : "br4GheimsHi78hjdl",
-        "owner" : "Stan00",
-        "msg" : "this is an example of a msg",
-        "posted" : "2020:01:01 12:31"
-    }
-    return JsonResponse(responce,safe=False)
+    messagesUnserialized = Message.objects.all().order_by("posted")
+    serializer = MessageSerializer(messagesUnserialized,many=True)
+    return JsonResponse(serializer.data,safe=False)
 
 #post msg
 @require_http_methods(["POST",])
 @csrf_exempt
 def msg_post(request):
-    responce = {
-        "Luck" :"We are hoping this msg was recived"
-    } 
-    return JsonResponse(responce,safe=False)
+    try:
+        newMessage = Message()
+        newMessage.owner = Person.objects.get(username=request.POST["username"])
+        newMessage.msg = request.POST["msg"]
+        newMessage.save()
+        return JsonResponse("200",safe=False)
+    except:
+        return HttpResponse("400")
 
 @require_http_methods(["POST",])
 @csrf_exempt
