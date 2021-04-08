@@ -1,15 +1,133 @@
-<!DOCTYPE html>{% load static %}
-<html lang="en">
+{% extends 'base.html' %}{% load static %}
+<!-- title -->
+{% block title %}TalkMe{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TalkMe</title>
-</head>
+<!--style -->
+{% block style %}
 
-<body>
-    <img src="{% static 'jpg/logo.jpg' %}">
-</body>
+<style>
+    .cover-image {
+        position: fixed;
+        z-index: 0;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    .login-form {
+        background-color: rgba(255, 255, 255, 0.938);
+        height: auto;
+        width: 80%;
+        z-index: 99;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        padding-bottom: 30px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    .profile-image {
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px rgba(210, 154, 221, 0.966) solid;
+    }
+    
+    .profile-div {
+        padding: 40px;
+        padding-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .click-text {
+        color: gray;
+        font-size: small;
+        text-align: center;
+    }
+    
+    .input-div {
+        margin-top: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .input-textbox {
+        height: 50px;
+        width: 80%;
+        padding-left: 10px;
+        border-radius: 3px;
+        outline: none;
+        border: rgb(184, 184, 184) 1px solid;
+    }
+    
+    .button {
+        background-color: rgb(39, 21, 71);
+        width: 80%;
+        height: 50px;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 3px;
+        font-weight: normal;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+    }
+</style>
+{% endblock %}
 
-</html>
+<!--body-->
+{% block body %}
+<!-- back image -->
+<img class="cover-image" src="{% static 'jpg/cover.jpg' %}">
+
+<!-- login form -->
+<div class="login-form">
+    <!-- form -->
+    <form id="form-details" method="POST" enctype="multipart/form-data">
+        <input type="file" id="profile" name="profile" style="display: none;" onchange="showPreviewOne(event);">
+        <!-- image -->
+        <div class="profile-div">
+            <img class="profile-image" id="profile-image-preview" onclick="selectProfile()" src="{% static 'png/profile-placeholder.png' %}">
+        </div>
+        <div class="click-text" onclick="selectProfile()">Change Photo</div>
+        <div class="input-div">
+            <input class="input-textbox" id="username" name="username" placeholder="Username">
+        </div>
+        <div class="input-div">
+            <div class="button" onclick="join()">Join</div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    function selectProfile() {
+        document.getElementById("profile").click()
+    }
+
+    function join() {
+        if (document.getElementById("username").value == "") {
+            alert("please enter a valid username")
+        } else {
+            document.getElementById("form-details").submit();
+        }
+    }
+
+    function showPreviewOne(event) {
+        if (event.target.files.length > 0) {
+            let src = URL.createObjectURL(event.target.files[0]);
+            let preview = document.getElementById("profile-image-preview");
+            preview.src = src;
+        }
+    }
+</script>
+{% endblock %}

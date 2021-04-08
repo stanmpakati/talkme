@@ -1,0 +1,132 @@
+{% extends 'base.html' %}{% load static %}
+<!-- title-->
+{% block title %}TalkMe{% endblock %}
+
+
+<!--style -->
+{% block style %}
+<style>
+    .chat-body {
+        background-size: cover;
+        height: 100%;
+        width: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin-bottom: 100px;
+        overflow-y: scroll;
+        z-index: 98;
+    }
+    
+    .msg-profile {
+        border-radius: 50%;
+        height: 40px;
+        width: 40px;
+        object-fit: cover;
+    }
+    
+    .profile {
+        width: 40px;
+    }
+    
+    .message {
+        background-color: rgb(230, 230, 230);
+        border-radius: 7px;
+        padding: 10px;
+        width: 70%;
+        display: flex;
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+    
+    .msg-owner-text {
+        font-size: x-small;
+        font-weight: 600;
+        margin-left: 10px;
+    }
+    
+    .msg-body {
+        font-weight: normal;
+        margin-top: 5px;
+    }
+    
+    .msg-create-div {
+        position: fixed;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        z-index: 99;
+        background-color: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    
+    .msg-write {
+        height: 50px;
+        width: 80%;
+        outline: none;
+        border: none;
+    }
+    
+    .msg-write:focus {
+        border-radius: solid 2px rgb(55, 0, 128);
+    }
+    
+    .send {
+        border-radius: 50%;
+        background-color: violet;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        width: 50px;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+</style>
+{% endblock %}
+
+<!--body-->
+{% block body %}
+
+<div class="chat-body">
+    {% for msg in msgs %}
+    <div class="message">
+        <div class="profile">
+            <img class="msg-profile" src="{{msg.owner.profile.url}}">
+        </div>
+        <div class="msg-owner-text">
+            {{msg.owner.username}}
+            <div class="msg-body">
+                {{msg.msg}}
+            </div>
+        </div>
+    </div>
+
+    {% endfor %}
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+
+</div>
+
+
+<div class="msg-create-div">
+    <input class="msg-write" type="text" placeholder="write message ...">
+    <div onclick="send()" id="send" class="send">></div>
+</div>
+
+
+<script>
+    function send() {
+        alert("send")
+    }
+</script>
+{% endblock %}
