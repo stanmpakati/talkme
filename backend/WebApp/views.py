@@ -18,16 +18,23 @@ def landing(request):
             new_user.profile = uploaded_image
             new_user.save()
 
-            return redirect('chatroom',new_user.username)
+            return redirect('/chatroom/'+new_user.username)
         except:
             return HttpResponse("Problem occured")
         
     return render(request,"landing/landing.html")
 
 @csrf_exempt
-def chatroom(request,**kwargs):
+def chatroom(request,username):
     if (request.method == "GET"):
         context = {
             "msgs" : Message.objects.all().order_by("posted")
         }
         return render(request,"chatroom/chatroom.html",context)
+    if (request.method == "POST"):
+        msg = (request.POST['msg'])
+        newMessage = Message()
+        newMessage.owner = Person.objects.get(username=username)
+        newMessage.msg = msg
+        newMessage.save()
+        return HttpResponse("200")
