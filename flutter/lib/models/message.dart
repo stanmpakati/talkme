@@ -1,29 +1,36 @@
 import 'package:flutter/foundation.dart';
+import 'package:ryan_app/models/user.dart';
 
 class Message {
-  final String userId;
-  final String message;
-  final DateTime timeSent;
+  final int id;
+  final String owner;
+  final String msg;
+  final DateTime posted;
+  final User user;
 
   Message({
-    @required this.userId,
-    @required this.message,
-    @required this.timeSent,
+    @required this.id,
+    @required this.owner,
+    @required this.msg,
+    @required this.posted,
+    this.user,
   });
 
   factory Message.fromJson(Map<String, dynamic> json) {
     return Message(
-      userId: json['userId'],
-      message: json['message'],
-      timeSent: DateTime.parse(json['timeSent']),
-    );
+        id: json['id'],
+        owner: json['owner'],
+        msg: json['msg'],
+        posted: DateTime.parse(json['posted']),
+        user: User(username: json['owner']));
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'userId': userId,
-      'message': message,
-      'timeSent': timeSent,
+      'id': id,
+      'owner': owner,
+      'msg': msg,
+      'posted': posted,
     };
   }
 }

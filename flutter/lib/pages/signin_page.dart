@@ -2,6 +2,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:ryan_app/services/api.dart';
+
+String userName;
 
 class SignInPage extends StatefulWidget {
   @override
@@ -10,10 +13,14 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   File _image;
+  String _imagePath;
   Map<String, dynamic> userMap = {};
   final _formKey = GlobalKey<FormState>();
 
   void _next() {
+    // TalkMeService().getUser('userId');
+    _formKey.currentState.save();
+    TalkMeService().login(userMap);
     Navigator.pushNamed(context, '/home');
   }
 
@@ -89,7 +96,10 @@ class _SignInPageState extends State<SignInPage> {
             SizedBox(height: 30),
             TextFormField(
               onSaved: (newValue) {
-                userMap['firstName'] = newValue;
+                userMap['username'] = newValue;
+                userMap['profile'] = _image;
+                userMap['path'] = _imagePath;
+                userName = newValue;
               },
               decoration: InputDecoration(
                 labelText: 'User Name',
@@ -139,6 +149,7 @@ class _SignInPageState extends State<SignInPage> {
     if (pickedFile != null) {
       setState(() {
         _image = File(pickedFile.path);
+        _imagePath = pickedFile.path;
       });
     }
   }

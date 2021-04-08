@@ -31,7 +31,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: FutureBuilder(
               future: TalkMeService().getMessages(),
               builder: (context, snapshot) {
-                print(snapshot);
                 List<Message> messages = snapshot.data;
                 if (snapshot.hasData) {
                   return ListView.builder(

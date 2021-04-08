@@ -1,72 +1,82 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:ryan_app/models/message.dart';
 import 'package:ryan_app/models/user.dart';
+import 'package:ryan_app/utils/constants.dart';
 
 class TalkMeService {
-  var url = Uri.parse('https://');
-  User user = User(userId: '9909', username: 'Stan');
+  var url = Uri.parse('${API}gateway');
+  User user = User(username: 'Stan');
 
   Future login(Map<String, dynamic> details) async {
     // TODO: implement sign in
-    var response = await http.post(url, body: details);
-    print('response status: ${response.statusCode}');
-    print('response body: ${response.body}');
-    if (response.statusCode == 200) {}
+    var url = Uri.parse('${API}join/');
+
+    var request = http.MultipartRequest('POST', url);
+    request.fields['username'] = details['username'];
+    request.files.add(
+      await http.MultipartFile.fromBytes(
+        'profile',
+        await File.fromUri(Uri.parse(details['path'])).readAsBytes(),
+      ),
+    );
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('success');
+    } else {
+      print(response.statusCode);
+    }
   }
 
-  Future<User> getUser(String userId) async {
+  Future<String> getUser(String owner) async {
     // TODO: implement get user
-    var response = await http.post(url, body: userId);
-    print('response status: ${response.statusCode}');
-    print('response body: ${response.body}');
+    var url = Uri.parse('${API}get_profile/');
+
+    var response = await http.post(url, body: {'username': owner});
     if (response.statusCode == 200) {
-      return User.fromJson(jsonDecode(response.body));
+      print(response.body);
+      return response.body;
     }
-    return User(userId: '9', username: 'error');
+    print(response.statusCode);
   }
 
   Future<List<Message>> getMessages() async {
     // TODO: get the messages in the chat
-    // var response = await http.get(url);
-    // print('response status: ${response.statusCode}');
-    // print('response body: ${response.body}');
+    var url = Uri.parse('${API}get_msgs/');
 
-    // if (response.statusCode == 200) {
-    var responseJson = [
-      {
-        'userId': '98s9',
-        'message': 'Hey',
-        'timeSent': DateTime.now().toString(),
-      },
-      {
-        'userId': '9909',
-        'message': 'Wassup',
-        'timeSent': DateTime.now().toString(),
-      },
-      {
-        'userId': '98s9',
-        'message': "I'm good",
-        'timeSent': DateTime.now().toString(),
-      },
-    ];
-    // List<Map<String, dynamic>> responseJson = jsonDecode(response.body);
-    List<Message> messageList = [];
-    responseJson
-        .forEach((message) => messageList.add(Message.fromJson(message)));
-    return messageList;
-    // }
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      List<dynamic> responseJson = jsonDecode(response.body);
+      List<Message> messageList = [];
+      responseJson.forEach((message) async {
+        var profileUrl = await getUser(message['owner']);
+        var msg = Message.fromJson(message);
+        msg.user.profilePictureUrl = profileUrl;
+        messageList.add(msg);
+      });
+
+      return messageList;
+    }
+    // print('response body: ${response.body}');
   }
 
   void sendText(String text) async {
     // TODO: send add your message to the chat
+    var url = Uri.parse('${API}send_msg/');
+
     Map<String, dynamic> message = {
-      'userId': user.userId,
-      'message': text,
-      'timeSent': DateTime.now(),
+      'id': 'iioi0',
+      'owner': user.username,
+      'msg': text,
+      'posted': DateTime.now(),
     };
 
     var response = await http.post(url, body: message);
+    print('response status: ${response.statusCode}');
+
+    if (response.statusCode == 200) {}
   }
 }

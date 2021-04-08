@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ryan_app/models/message.dart';
 import 'package:ryan_app/models/user.dart';
+import 'package:ryan_app/pages/signin_page.dart';
 import 'package:ryan_app/services/api.dart';
 import 'package:ryan_app/services/time_ago.dart';
 
@@ -9,7 +10,7 @@ Widget chatBubble(Message message) {
   User _me = _service.user;
 
   // To check If I'm the one who sent the message
-  bool _mine = _me.userId == message.userId;
+  bool _mine = userName == message.owner;
 
   return Container(
     margin: EdgeInsets.only(bottom: 6),
@@ -18,16 +19,23 @@ Widget chatBubble(Message message) {
     ),
     child: Row(
       // mainAxisAlignment:
-      // _mine ? MainAxisAlignment.end : MainAxisAlignment.start,
       textDirection: _mine ? TextDirection.rtl : TextDirection.ltr,
       children: [
         CircleAvatar(
           radius: 25,
           backgroundColor: Colors.lightGreen,
+          // child: Image.network(
+          //   message.user.profilePictureUrl,
+          //   errorBuilder: (context, error, stackTrace) => Icon(
+          //     Icons.person,
+          //     color: Colors.black,
+          //     size: 28,
+          //   ),
+          // ),
           child: Icon(
             Icons.person,
             color: Colors.black,
-            size: 36,
+            size: 28,
           ),
         ),
         Container(
@@ -41,20 +49,20 @@ Widget chatBubble(Message message) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                message.userId,
+                message.owner,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 12,
                 ),
               ),
               SizedBox(height: 2),
-              Text(message.message),
+              Text(message.msg),
               SizedBox(height: 2),
               Row(
                 children: [
                   Expanded(child: SizedBox()),
                   Text(
-                    '${TimeAgo.timeAgoSinceDate(message.timeSent)}',
+                    '${TimeAgo.timeAgoSinceDate(message.posted)}',
                     style: TextStyle(fontSize: 12),
                   ),
                 ],
