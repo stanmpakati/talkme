@@ -11,9 +11,17 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   TextEditingController _textController = TextEditingController();
   bool _isWritting = false;
+  // List<Message> _messages;
+  var _services = TalkMeService();
 
   void _sendText(String text) {
-    TalkMeService().sendText(text);
+    _textController.clear();
+    _services.sendText(text);
+    _messages();
+  }
+
+  Future<List<Message>> _messages() {
+    return _services.getMessages();
   }
 
   @override
@@ -29,7 +37,7 @@ class _ChatScreenState extends State<ChatScreen> {
             padding: EdgeInsets.all(12),
             height: MediaQuery.of(context).size.height,
             child: FutureBuilder(
-              future: TalkMeService().getMessages(),
+              future: _messages(),
               builder: (context, snapshot) {
                 List<Message> messages = snapshot.data;
                 if (snapshot.hasData) {

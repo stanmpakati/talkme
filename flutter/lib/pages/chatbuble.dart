@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ryan_app/models/message.dart';
-import 'package:ryan_app/models/user.dart';
 import 'package:ryan_app/pages/signin_page.dart';
-import 'package:ryan_app/services/api.dart';
 import 'package:ryan_app/services/time_ago.dart';
 
 Widget chatBubble(Message message) {
-  final _service = TalkMeService();
-  User _me = _service.user;
-
   // To check If I'm the one who sent the message
   bool _mine = userName == message.owner;
 

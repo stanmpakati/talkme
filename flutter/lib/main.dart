@@ -11,8 +11,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-          primarySwatch: Colors.lightGreen,
-          scaffoldBackgroundColor: Colors.grey[100]),
+        // brightness: Brightness.dark,
+        primarySwatch: Colors.lightGreen,
+        scaffoldBackgroundColor: Colors.grey[100],
+      ),
       onGenerateRoute: RouteGenerator.generateRoute,
       initialRoute: '/',
     );
