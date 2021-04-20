@@ -1,0 +1,10 @@
+.navbar {
+    position: fixed;
+    z-index: 99;
+    background: rgb(159, 26, 137);
+    background: linear-gradient(90deg, rgba(159, 26, 137, 1) 0%, rgba(208, 44, 230, 1) 35%, rgba(172, 92, 209, 0.6143499636182599) 100%);
+    top: 0;
+    left: 0;
+    padding: 30px;
+    width: 100%;
+}
