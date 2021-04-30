@@ -68,8 +68,9 @@ class TalkMeService {
       'msg': text,
     };
 
-    var response = await http.post(url, body: message);
+    var response = await http.post(url, headers: message);
     print('response status: ${response.statusCode}');
+    print('response status: ${response.body}');
 
     var x = await getMessages();
     print(x[x.length - 1].msg);
